@@ -27,3 +27,11 @@ npm start
 - O formulário valida o título, e o backend valida os dados recebidos com Zod.
 - A interface mostra feedback ao salvar ou excluir. A lista exibe até 10 tarefas inicialmente e revela mais ao rolar ou clicar em **Mostrar mais tarefas**.
 - As tarefas ficam na memória do processo Node.js e são apagadas quando o servidor reinicia. Use dados fictícios nos testes.
+
+## Testes
+
+```sh
+npm test
+```
+
+Os testes verificam a validação do título com Zod e o fluxo de criação, atualização, exclusão e consulta pelo roteador tRPC. Eles rodam com o servidor Next.js desligado.
