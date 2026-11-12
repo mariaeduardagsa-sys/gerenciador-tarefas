@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { initTRPC, TRPCError } from '@trpc/server';
+import { dadosTarefa } from './tarefa.schema';
 import { z } from 'zod';
 
 type Tarefa = {
@@ -14,11 +15,6 @@ const memoria = globalThis as typeof globalThis & {
 };
 const tarefas = (memoria.tarefasDoGerenciador ??=[]);
 const t = initTRPC.create();
-
-const dadosTarefa = z.object({
-  titulo: z.string().trim().min(1, 'Informe o título da tarefa.'),
-  descricao: z.string().trim().optional(),
-});
 
 const porId = z.object({
     id: z.uuid('ID de tarefa inválida.'),
