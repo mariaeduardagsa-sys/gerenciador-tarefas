@@ -9,7 +9,10 @@ type Tarefa = {
   dataCriacao: number;
 };
 
-const tarefas: Tarefa[] = [];
+const memoria = globalThis as typeof globalThis & {
+  tarefasDoGerenciador?: Tarefa[];
+};
+const tarefas = (memoria.tarefasDoGerenciador ??=[]);
 const t = initTRPC.create();
 
 const dadosTarefa = z.object({
@@ -63,3 +66,4 @@ export const appRouter = t.router({
 });
 
 export type AppRouter = typeof appRouter;
+export const chamarTarefas = appRouter.createCaller({});
