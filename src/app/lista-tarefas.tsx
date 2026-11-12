@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { createTRPCClient, httpLink, TRPCClientError } from '@trpc/client';
 import type { inferRouterOutputs } from '@trpc/server';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import type { AppRouter } from '@/app/server/router';
+import { useEffect, useRef, useState } from 'react';
 
 type Tarefa = inferRouterOutputs<AppRouter>['listar'][number];
+
+const tamanhoLote = 10;
 
 const cliente = createTRPCClient<AppRouter>({
   links: [httpLink({ url: '/api/trpc' })],
@@ -25,8 +27,29 @@ export default function ListaTarefas({ tarefas }: { tarefas: Tarefa[] }) {
   const [removidas, setRemovidas] = useState<string[]>([]);
   const [sucesso, setSucesso] = useState('');
   const [erro, setErro] = useState('');
+  const [limite, setLimite] = useState(tamanhoLote);
+  const marcador = useRef<HTMLDivElement>(null);
 
   const visiveis = tarefas.filter((tarefa) => !removidas.includes(tarefa.id));
+  const temMais = visiveis.length > limite;
+
+  useEffect(() => {
+    const elemento = marcador.current;
+
+    if (!temMais || !elemento || !('IntersectionObserver' in window)) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entrada]) => {
+      if (entrada.isIntersecting) {
+        observer.disconnect();
+        setLimite((atual) => atual + tamanhoLote);
+      }
+    });
+
+    observer.observe(elemento);
+    return () => observer.disconnect();
+  }, [temMais, limite]);
 
   async function excluir(id: string) {
     setExcluindo(id);
@@ -58,7 +81,7 @@ export default function ListaTarefas({ tarefas }: { tarefas: Tarefa[] }) {
         <p>Nenhuma tarefa cadastrada.</p>
       ) : (
         <ul>
-          {visiveis.map((tarefa) => (
+          {visiveis.slice(0, limite).map((tarefa) => (
             <li key={tarefa.id}>
               <h2>{tarefa.titulo}</h2>
               {tarefa.descricao && <p>{tarefa.descricao}</p>}
@@ -77,6 +100,16 @@ export default function ListaTarefas({ tarefas }: { tarefas: Tarefa[] }) {
             </li>
           ))}
         </ul>
+      )}
+      {temMais && (
+        <div ref={marcador}>
+          <button
+            type="button"
+            onClick={() => setLimite((atual) => atual + tamanhoLote)}
+          >
+            Mostrar mais tarefas
+          </button>
+        </div>
       )}
     </>
   );
