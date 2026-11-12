@@ -37,6 +37,9 @@ function buscarIndice(id: string){
 
 export const appRouter = t.router({
   listar: t.procedure.query(() => tarefas),
+  obter: t.procedure.input(porId).query(({ input }) => {
+    return tarefas[buscarIndice(input.id)];
+  }),
   criar: t.procedure.input(dadosTarefa).mutation(({ input }) => {
     const tarefa: Tarefa = {
       id: randomUUID(),

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { createTRPCClient, httpLink, TRPCClientError } from '@trpc/client';
 import type { inferRouterOutputs } from '@trpc/server';
 import { useRouter } from 'next/navigation';
@@ -65,6 +66,7 @@ export default function ListaTarefas({ tarefas }: { tarefas: Tarefa[] }) {
                 Criada em {formatoData.format(tarefa.dataCriacao)}
               </time>
               {' '}
+              <Link href={`/tarefas/${tarefa.id}/editar`}>Editar</Link>
               <button
                 type="button"
                 disabled={excluindo !== null}
