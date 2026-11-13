@@ -35,3 +35,9 @@ npm test
 ```
 
 Os testes verificam a validação do título com Zod e o fluxo de criação, atualização, exclusão e consulta pelo roteador tRPC. Eles rodam com o servidor Next.js desligado.
+
+## Vídeo de apresentação
+
+No vídeo, demonstro como criar, listar, editar e excluir tarefas e explico as escolhas técnicas do projeto, incluindo SSR com Next.js 15, a API tRPC e o armazenamento em memória.
+
+[Assista à apresentação do desafio técnico da Artefact no YouTube](https://youtu.be/NfaVnGgz7Co)
